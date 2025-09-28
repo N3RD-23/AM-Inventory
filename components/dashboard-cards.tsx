@@ -206,7 +206,7 @@ export default async function DashboardPage() {
 
     return (
         <div className="p-4 space-y-6">
-            {/* <UniversalSearch /> */}
+            <UniversalSearch />
 
             <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                 {cards.map(({ label, count, href, Icon }) => (

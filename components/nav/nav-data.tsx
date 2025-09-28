@@ -7,7 +7,8 @@ import {
     Columns3Icon,
     Bug,
     HousePlug,
-    GitBranch
+    GitBranch,
+    TicketSlash
 } from "lucide-react";
 
 export type Role = "ADMIN" | "TECH";
@@ -33,7 +34,8 @@ export const NAV_ITEMS: NavItem[] = [
         label: "Inventory",
         icon: <Boxes size={18} />,
         children: [
-            { key: "inv-all", label: "Assets", href: "/assets" },
+            { key: "inv-all", label: "Inventory", href: "/inventory" },
+            { key: "ass-add", label: "Assets Management", href: "/assets" },
         ],
     },
     {
@@ -57,6 +59,7 @@ export const NAV_ITEMS: NavItem[] = [
             { key: "adm-users", label: "Users", href: "/admin/users", icon: <Users size={16} /> },
             { key: "adm-staff", label: "Staff", href: "/admin/staff", icon: <UserCircle2 size={16} /> },
             { key: "adm-brands", label: "Brands", href: "/admin/brands", icon: <BadgeCheck size={16} /> },
+            { key: "adm-models", label: "Models", href: "/admin/models", icon: <TicketSlash size={16} /> },
             { key: "adm-locs", label: "Locations", href: "/admin/locations", icon: <Building2 size={16} /> },
             { key: "adm-outlets", label: "Outlets", href: "/admin/outlets", icon: <LandPlot size={16} /> },
             { key: "adm-rooms", label: "Rooms", href: "/admin/rooms", icon: <HousePlug size={16} /> },

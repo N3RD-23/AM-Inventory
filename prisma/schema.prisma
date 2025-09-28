@@ -248,7 +248,7 @@ model TaskLog {
   issueTypeId String?
   issueType   IssueType? @relation(fields: [issueTypeId], references: [id], onDelete: SetNull)
 
-  issueCategory  String   @default("TroubleShoot")
+  issueCategory String @default("TroubleShoot")
 
   statusId String
   status   Status @relation(fields: [statusId], references: [id])
@@ -256,7 +256,7 @@ model TaskLog {
   attendedById String?
   attendedBy   Staff?  @relation("AttendedBy", fields: [attendedById], references: [id], onDelete: SetNull)
 
-  closedDate   DateTime?
+  closedDate DateTime?
 
   approvedById String?
   approvedBy   Staff?    @relation("ApprovedBy", fields: [approvedById], references: [id], onDelete: SetNull)
@@ -269,4 +269,30 @@ model TaskLog {
 
   @@index([date])
   @@index([statusId])
+}
+
+model InventoryItem {
+  id         String   @id @default(cuid())
+  name       String   @unique
+  details    String?
+  assigned   Int      @default(0) // assigned out in the field
+  unassigned Int      @default(0) // in stock (available)
+  damaged    Int      @default(0) // damaged/unusable
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  action     String
+  category   String?
+  entity     String?
+  message    String?
+  actorEmail String?
+  actorName  String?
+  ip         String?
+  before     String? // JSON serialized, or use Json if supported
+  after      String? // JSON serialized, or use Json if supported
+  // @@index([createdAt, action, category])
 }

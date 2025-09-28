@@ -8,7 +8,7 @@ export default async function AssetsPage() {
   if (!session) redirect("/sign-in");
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-semibold">Assets</h1>
+      <h1 className="text-xl font-semibold">Asset Management</h1>
       <AssetTable />
     </div>
   );

@@ -2,15 +2,16 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { Plus, Edit3, Trash2, Check, X, Factory, MapPin, Building2, ListTree, Loader2, FolderTree, UserSquare2, ClipboardCheck, LandPlot, Bug, HousePlug } from "lucide-react";
+import { Plus, Edit3, Trash2, Check, X, Factory, MapPin, Building2, ListTree, Loader2, FolderTree, UserSquare2, ClipboardCheck, LandPlot, Bug, HousePlug, Pin } from "lucide-react";
 import { ConfirmDialog } from "@/components/ui/confirm";
 import { useToast } from "@/components/ui/toast";
 
-type Kind = "brands" | "locations" | "departments" | "statuses" | "categories" | "designations" | "logs" | "outlets" | "rooms" | "issueTypes";
+type Kind = "brands" | "locations" | "departments" | "statuses" | "categories" | "designations" | "logs" | "outlets" | "rooms" | "issueTypes" | "models";
 type Item = { id: string; name: string; createdAt?: string; updatedAt?: string };
 
 const KIND_META: Record<Kind, { label: string; Icon: any }> = {
   brands: { label: "Brands", Icon: Factory },
+  models: { label: "Models", Icon: Pin },
   locations: { label: "Locations", Icon: MapPin },
   departments: { label: "Departments", Icon: Building2 },
   statuses: { label: "Statuses", Icon: ListTree },
