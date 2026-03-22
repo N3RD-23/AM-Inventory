@@ -191,7 +191,7 @@ export default async function DashboardPage() {
         : [[], 0];
 
     const cards = [
-        //{ label: "Users", count: usersCount, href: "/admin/users", Icon: UsersIcon, adminOnly: true },
+        { label: "Users", count: usersCount, href: "/admin/users", Icon: UsersIcon, adminOnly: true },
         { label: "PCs", count: pcsCount, href: "/assets?category=PC", Icon: Cpu },
         { label: "Monitors", count: monitorsCount, href: "/assets?category=MONITOR", Icon: Monitor },
         { label: "UPS", count: upsCount, href: "/assets?category=UPS", Icon: HardDrive },

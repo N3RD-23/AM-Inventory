@@ -11,8 +11,12 @@ export default function SignInPage() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    const res = await signIn("credentials", { email, password, redirect: true, callbackUrl: "/" });
-    if (!res?.ok) push({ title: "Invalid credentials", kind: "error" });
+    const res = await signIn("credentials", { email, password, redirect: false });
+    if (!res?.ok) {
+      push({ title: "Invalid credentials", kind: "error" });
+    } else {
+      window.location.href = "/";
+    }
   }
 
   return (

@@ -1,4 +1,4 @@
-// File: C:\Users\ananea Maldives\Downloads\am-inventory-aceternity-v3\app\logs\page.tsx
+// File: /Users/nerd/Desktop/AnaneaMadivaru/AM-Inventory/app/logs/page.tsx
 import * as entry from '../../../../app/logs/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

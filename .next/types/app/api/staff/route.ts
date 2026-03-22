@@ -1,4 +1,4 @@
-// File: C:\Users\ananea Maldives\Downloads\am-inventory-aceternity-v3\app\api\staff\route.ts
+// File: /Users/nerd/Desktop/AnaneaMadivaru/AM-Inventory/app/api/staff/route.ts
 import * as entry from '../../../../../app/api/staff/route.js'
 import type { NextRequest } from 'next/server.js'
 

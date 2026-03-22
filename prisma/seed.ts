@@ -38,30 +38,38 @@ async function main() {
       tag: "PC-0001",
       category: "PC",
       model: "OfficeBox",
-      brandId: brand.id, // from the brand upsert above
+      brand: { connect: { id: brand.id } },
       status: "IN_STOCK",
-      locationId: loc.id, // from the location upsert above
-      cpu: "i5",
-      ramGB: 16,
-      storage: "512GB SSD",
+      location: { connect: { id: loc.id } },
+      processor: "i5",
+      ram: "16 GB",
+      hdd: "512 GB SSD",
     },
   });
 
-  await prisma.customField.createMany({
-    data: [
-      { name: "WarrantyUntil", type: "date", category: "PC" },
-      { name: "DeskNumber", type: "text", category: "MONITOR" },
-      { name: "BatteryReplaceDate", type: "date", category: "UPS" },
-    ],
-  });
+  for (const field of [
+    { name: "WarrantyUntil", type: "date", category: "PC" },
+    { name: "DeskNumber", type: "text", category: "MONITOR" },
+    { name: "BatteryReplaceDate", type: "date", category: "UPS" },
+  ]) {
+    await prisma.customField.upsert({
+      where: { name_category: { name: field.name, category: field.category } },
+      update: {},
+      create: field,
+    });
+  }
 
-  await prisma.department.createMany({
-    data: [
-      { name: "IT" },
-      { name: "HR" },
-      { name: "Finance" },
-    ],
-  });
+  for (const dept of [
+    { name: "IT" },
+    { name: "HR" },
+    { name: "Finance" },
+  ]) {
+    await prisma.department.upsert({
+      where: { name: dept.name },
+      update: {},
+      create: dept,
+    });
+  }
 
   console.log("Seeded admin:", admin.email);
 }

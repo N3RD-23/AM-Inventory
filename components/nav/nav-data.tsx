@@ -8,7 +8,8 @@ import {
     Bug,
     HousePlug,
     GitBranch,
-    TicketSlash
+    TicketSlash,
+    Network
 } from "lucide-react";
 
 export type Role = "ADMIN" | "TECH";
@@ -28,6 +29,12 @@ export const NAV_ITEMS: NavItem[] = [
         label: "Dashboard",
         href: "/",
         icon: <LayoutDashboard size={18} />,
+    },
+    {
+        key: "network",
+        label: "Network",
+        href: "/network",
+        icon: <Network size={18} />,
     },
     {
         key: "inventory",
