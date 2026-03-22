@@ -10,6 +10,7 @@ export default async function AdminPage() {
 
   const links = [
     { href: "/admin/users", label: "Users" },
+    { href: "/admin/active-users", label: "Active Users" },
     { href: "/admin/staff", label: "Staff" },
     { href: "/admin/brands", label: "Brands" },
     { href: "/admin/statuses", label: "Statuses" },

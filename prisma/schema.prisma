@@ -296,3 +296,18 @@ model AuditLog {
   after      String? // JSON serialized, or use Json if supported
   // @@index([createdAt, action, category])
 }
+
+model UserActivity {
+  id        String   @id @default(cuid())
+  userId    String
+  userEmail String
+  userName  String?
+  action    String   // "login", "logout", "activity"
+  ipAddress String?
+  userAgent String?
+  sessionId String?  // For tracking sessions
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([createdAt])
+}

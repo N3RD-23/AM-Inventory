@@ -5,15 +5,32 @@ import Link from "next/link";
 import SidebarNav from "@/components/nav/SidebarNav"; // the component with sub-menus
 import type { Role } from "@/components/nav/nav-data";
 import { LogOut, Menu } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
+import { logUserActivity } from "@/lib/user-activity";
 
 export default function LayoutShell({
     role,
     children,
 }: {
-    role: Role;
+    role?: Role;
     children: React.ReactNode;
 }) {
-    const [mobileOpen, setMobileOpen] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const { data: session } = useSession();
+
+    const handleLogout = async () => {
+        // Log logout activity
+        if (session?.user) {
+            await logUserActivity({
+                userId: (session.user as any).id || "unknown",
+                userEmail: session.user.email || "unknown",
+                userName: session.user.name || undefined,
+                action: "logout",
+            }).catch(console.error);
+        }
+        // Sign out
+        await signOut({ callbackUrl: "/sign-in" });
+    };
 
     return (
         <div className="min-h-screen grid grid-cols-1 lg:grid-cols-[260px_1fr]">
@@ -40,9 +57,13 @@ export default function LayoutShell({
                     </div>
                     <div className="flex items-center gap-2">
                         {/* your theme toggle, breadcrumbs, etc can live here */}
-                        <Link href="/api/auth/signout" className="ac-btn px-3" aria-label="Sign out">
+                        <button 
+                            onClick={handleLogout}
+                            className="ac-btn px-3" 
+                            aria-label="Sign out"
+                        >
                             <LogOut size={18} />
-                        </Link>
+                        </button>
                     </div>
                 </header>
 

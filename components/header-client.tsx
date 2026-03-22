@@ -2,13 +2,16 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
+import { logUserActivity } from "@/lib/user-activity";
 import { Menu, LogOut, Moon } from "lucide-react";
 import MobileMenu from "@/components/mobile-menu";
 import DesktopNav from "@/components/desktop-nav";
 
 export default function HeaderClient({ role }: { role?: "ADMIN" | "TECH" }) {
     const [menuOpen, setMenuOpen] = useState(false);
+    const { data: session } = useSession();
 
     // Force dark mode (belt-and-suspenders; keep <html className="dark"> in layout too)
     useEffect(() => {
@@ -22,6 +25,20 @@ export default function HeaderClient({ role }: { role?: "ADMIN" | "TECH" }) {
         else body.classList.remove("overflow-hidden");
         return () => body.classList.remove("overflow-hidden");
     }, [menuOpen]);
+
+    const handleLogout = async () => {
+        // Log logout activity
+        if (session?.user) {
+            await logUserActivity({
+                userId: (session.user as any).id || "unknown",
+                userEmail: session.user.email || "unknown",
+                userName: session.user.name || undefined,
+                action: "logout",
+            }).catch(console.error);
+        }
+        // Sign out
+        await signOut({ callbackUrl: "/sign-in" });
+    };
 
     return (
         <header className="sticky top-0 z-40 border-b border-zinc-200/70 dark:border-zinc-800/70 bg-white/70 dark:bg-zinc-950/70 backdrop-blur supports-[backdrop-filter]:bg-white/40 supports-[backdrop-filter]:dark:bg-zinc-950/40">
@@ -48,10 +65,10 @@ export default function HeaderClient({ role }: { role?: "ADMIN" | "TECH" }) {
 
                     {/* Right: (dark indicator for spacing), logout */}
                     <div className="flex items-center gap-2">
-                        <span className="ac-btn px-2 pointer-events-none opacity-60" aria-hidden>
+                        {/* <span className="ac-btn px-2 pointer-events-none opacity-60" aria-hidden>
                             <Moon size={18} />
-                        </span>
-                        <button className="ac-btn px-2" onClick={() => signOut()} title="Logout">
+                        </span> */}
+                        <button className="ac-btn px-2" onClick={handleLogout} title="Logout">
                             <LogOut size={18} />
                         </button>
                     </div>

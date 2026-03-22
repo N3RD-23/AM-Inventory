@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { NextAuthOptions, User as NextAuthUser } from "next-auth";
 import bcrypt from "bcryptjs";
+import { logUserActivity } from "@/lib/user-activity";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -26,6 +27,19 @@ export const authOptions: NextAuthOptions = {
 
   pages: { signIn: "/sign-in" },
   callbacks: {
+    async signIn({ user, account, profile }) {
+      // Log successful login
+      if (user?.email) {
+        await logUserActivity({
+          userId: user.id || "unknown",
+          userEmail: user.email,
+          userName: user.name || undefined,
+          action: "login",
+          sessionId: account?.providerAccountId,
+        }).catch(console.error);
+      }
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.role = (user as any).role;
