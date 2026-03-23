@@ -1,10 +1,6 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-  "/page": "app/page.js",
-  "/sign-in/page": "app/sign-in/page.js",
-  "/tasks/page": "app/tasks/page.js",
-  "/admin/active-users/page": "app/admin/active-users/page.js",
-  "/api/admin/active-users/route": "app/api/admin/active-users/route.js",
-  "/admin/users/page": "app/admin/users/page.js",
-  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js"
+  "/api/user/heartbeat/route": "app/api/user/heartbeat/route.js",
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/network/ont-zone/[zone]/page": "app/network/ont-zone/[zone]/page.js",
+  "/api/ont-zones/route": "app/api/ont-zones/route.js"
 }

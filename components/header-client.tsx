@@ -26,6 +26,28 @@ export default function HeaderClient({ role }: { role?: "ADMIN" | "TECH" }) {
         return () => body.classList.remove("overflow-hidden");
     }, [menuOpen]);
 
+    // Heartbeat to mark user as online
+    useEffect(() => {
+        if (!session?.user) return;
+
+        let active = true;
+        const sendHeartbeat = async () => {
+            if (!active) return;
+            try {
+                await fetch("/api/user/heartbeat", { method: "POST" });
+            } catch (error) {
+                console.error("Heartbeat failed:", error);
+            }
+        };
+
+        sendHeartbeat();
+        const id = setInterval(sendHeartbeat, 30000);
+        return () => {
+            active = false;
+            clearInterval(id);
+        };
+    }, [session]);
+
     const handleLogout = async () => {
         // Log logout activity
         if (session?.user) {

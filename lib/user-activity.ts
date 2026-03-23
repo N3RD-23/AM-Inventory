@@ -4,7 +4,7 @@ export interface UserActivityData {
   userId: string;
   userEmail: string;
   userName?: string;
-  action: "login" | "logout" | "activity";
+  action: "login" | "logout" | "activity" | "heartbeat";
   ipAddress?: string;
   userAgent?: string;
   sessionId?: string;
@@ -38,7 +38,7 @@ export async function getActiveUsers(sinceMinutes: number = 30) {
         gte: since,
       },
       action: {
-        in: ["login", "activity"],
+        in: ["login", "activity", "heartbeat"],
       },
     },
     select: {

@@ -11,16 +11,14 @@ model User {
   id            String    @id @default(cuid())
   email         String    @unique
   name          String?
-  role          String    @default("TECH") // ADMIN | TECH
+  role          String    @default("TECH")
   passwordHash  String
   emailVerified DateTime?
   image         String?
-
-  accounts Account[]
-  sessions Session[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
 }
 
 model Staff {
@@ -29,13 +27,12 @@ model Staff {
   lastName      String?
   staffCode     String       @unique
   departmentId  String?
-  department    Department?  @relation(fields: [departmentId], references: [id], onDelete: SetNull)
   designationId String?
-  designation   Designation? @relation(fields: [designationId], references: [id], onDelete: SetNull)
-
-  attendedTasks TaskLog[] @relation("AttendedBy")
-  approvedTasks TaskLog[] @relation("ApprovedBy")
   Asset         Asset[]
+  department    Department?  @relation(fields: [departmentId], references: [id])
+  designation   Designation? @relation(fields: [designationId], references: [id])
+  attendedTasks TaskLog[]    @relation("AttendedBy")
+  approvedTasks TaskLog[]    @relation("ApprovedBy")
 }
 
 model Location {
@@ -44,16 +41,15 @@ model Location {
   address   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  assets Asset[]
+  assets    Asset[]
 }
 
 model Outlet {
   id        String    @id @default(cuid())
   name      String    @unique
-  tasks     TaskLog[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  tasks     TaskLog[]
 }
 
 model Brand {
@@ -61,55 +57,46 @@ model Brand {
   name      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  assets Asset[]
+  assets    Asset[]
 }
 
 model Category {
   id        String   @id @default(cuid())
-  name      String   @unique // what users select (e.g., "PC", "MONITOR", "UPS")
-  code      String? // optional short code used in tags (e.g., "PC", "MON", "UPS")
+  name      String   @unique
+  code      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Asset {
-  id           String  @id @default(cuid())
-  tag          String  @unique
+  id           String        @id @default(cuid())
+  tag          String        @unique
   category     String
   model        String
   serialNumber String?
-  quantity     Int     @default(1)
+  quantity     Int           @default(1)
   status       String
-
-  brandId    String?
-  brand      Brand?    @relation(fields: [brandId], references: [id])
-  locationId String?
-  location   Location? @relation(fields: [locationId], references: [id])
-
-  staffId String?
-  staff   Staff?  @relation(fields: [staffId], references: [id])
-
+  brandId      String?
+  locationId   String?
+  staffId      String?
   departmentId String?
-  department   Department? @relation(fields: [departmentId], references: [id])
-
-  pcHostname   String? // used by UPS/MONITOR and PC (Hostname)
-  employeeName String? // UPS/MONITOR
-  designation  String? // UPS/MONITOR
-
-  processor  String?
-  ram        String? // string to allow e.g. "16 GB"
-  hdd        String? // allow "512 GB SSD", etc.
-  os         String?
-  serviceTag String?
-  ipAddress  String?
-
-  assignee String?
-
+  pcHostname   String?
+  employeeName String?
+  designation  String?
+  processor    String?
+  ram          String?
+  hdd          String?
+  os           String?
+  serviceTag   String?
+  ipAddress    String?
+  assignee     String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  brand        Brand?        @relation(fields: [brandId], references: [id])
+  location     Location?     @relation(fields: [locationId], references: [id])
+  staff        Staff?        @relation(fields: [staffId], references: [id])
+  department   Department?   @relation(fields: [departmentId], references: [id])
   customValues CustomValue[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model CategoryCounter {
@@ -126,13 +113,12 @@ model Status {
 }
 
 model CustomField {
-  id        String   @id @default(cuid())
+  id        String        @id @default(cuid())
   name      String
-  type      String // text | number | date
-  category  String // MONITOR | PC | UPS
-  createdAt DateTime @default(now())
-
-  values CustomValue[]
+  type      String
+  category  String
+  createdAt DateTime      @default(now())
+  values    CustomValue[]
 
   @@unique([name, category])
 }
@@ -152,18 +138,16 @@ model Designation {
   name      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  staff Staff[] // reverse relation
+  staff     Staff[]
 }
 
 model CustomValue {
-  id      String  @id @default(cuid())
+  id      String      @id @default(cuid())
   assetId String
   fieldId String
   value   String?
-
-  asset Asset       @relation(fields: [assetId], references: [id])
-  field CustomField @relation(fields: [fieldId], references: [id])
+  asset   Asset       @relation(fields: [assetId], references: [id])
+  field   CustomField @relation(fields: [fieldId], references: [id])
 
   @@unique([assetId, fieldId])
 }
@@ -193,8 +177,7 @@ model Account {
   session_state      String?
   oauth_token_secret String?
   oauth_token        String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -204,8 +187,7 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
@@ -219,53 +201,42 @@ model VerificationToken {
 model Room {
   id        String    @id @default(cuid())
   name      String    @unique
-  tasks     TaskLog[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  tasks     TaskLog[]
 }
 
 model IssueType {
   id        String    @id @default(cuid())
   name      String    @unique
-  tasks     TaskLog[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  tasks     TaskLog[]
 }
 
 model TaskLog {
-  id   String   @id @default(cuid())
-  date DateTime @default(now())
-
-  roomId String?
-  room   Room?   @relation(fields: [roomId], references: [id], onDelete: SetNull)
-
-  departmentId String?
-  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
-
-  outletId String?
-  outlet   Outlet? @relation(fields: [outletId], references: [id], onDelete: SetNull)
-
-  issueTypeId String?
-  issueType   IssueType? @relation(fields: [issueTypeId], references: [id], onDelete: SetNull)
-
-  issueCategory String @default("TroubleShoot")
-
-  statusId String
-  status   Status @relation(fields: [statusId], references: [id])
-
-  attendedById String?
-  attendedBy   Staff?  @relation("AttendedBy", fields: [attendedById], references: [id], onDelete: SetNull)
-
-  closedDate DateTime?
-
-  approvedById String?
-  approvedBy   Staff?    @relation("ApprovedBy", fields: [approvedById], references: [id], onDelete: SetNull)
-  approvedDate DateTime?
-
-  detail      String
-  actionTaken String?
-
+  id             String      @id @default(cuid())
+  date           DateTime    @default(now())
+  roomId         String?
+  departmentId   String?
+  outletId       String?
+  issueTypeId    String?
+  issueCategory  String      @default("TroubleShoot")
+  statusId       String
+  attendedById   String?
+  approvedById   String?
+  approvedDate   DateTime?
+  detail         String
+  actionTaken    String?
   createdByEmail String?
+  closedDate     DateTime?
+  room           Room?       @relation(fields: [roomId], references: [id])
+  department     Department? @relation(fields: [departmentId], references: [id])
+  outlet         Outlet?     @relation(fields: [outletId], references: [id])
+  issueType      IssueType?  @relation(fields: [issueTypeId], references: [id])
+  status         Status      @relation(fields: [statusId], references: [id])
+  attendedBy     Staff?      @relation("AttendedBy", fields: [attendedById], references: [id])
+  approvedBy     Staff?      @relation("ApprovedBy", fields: [approvedById], references: [id])
 
   @@index([date])
   @@index([statusId])
@@ -275,9 +246,9 @@ model InventoryItem {
   id         String   @id @default(cuid())
   name       String   @unique
   details    String?
-  assigned   Int      @default(0) // assigned out in the field
-  unassigned Int      @default(0) // in stock (available)
-  damaged    Int      @default(0) // damaged/unusable
+  assigned   Int      @default(0)
+  unassigned Int      @default(0)
+  damaged    Int      @default(0)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
@@ -292,9 +263,8 @@ model AuditLog {
   actorEmail String?
   actorName  String?
   ip         String?
-  before     String? // JSON serialized, or use Json if supported
-  after      String? // JSON serialized, or use Json if supported
-  // @@index([createdAt, action, category])
+  before     String?
+  after      String?
 }
 
 model UserActivity {
@@ -302,12 +272,45 @@ model UserActivity {
   userId    String
   userEmail String
   userName  String?
-  action    String   // "login", "logout", "activity"
+  action    String
   ipAddress String?
   userAgent String?
-  sessionId String?  // For tracking sessions
+  sessionId String?
   createdAt DateTime @default(now())
 
   @@index([userId, createdAt])
   @@index([createdAt])
+}
+
+model Model {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model NetworkDevice {
+  id            String   @id @default(cuid())
+  type          String
+  switchName    String?
+  mac           String?
+  serialNo      String?
+  port          String?
+  uplink        String?
+  sfpCoreSwPort String?
+  ipAddress     String?
+  password      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model OntZone {
+  id        String   @id @default(cuid())
+  room      String
+  fsanNo    String
+  mac       String
+  serialNo  String
+  zone      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { getActiveUsersCount } from "@/lib/user-activity";
 import {
     Users as UsersIcon, Monitor, HardDrive, Cpu, Factory, MapPin, Building2,
     ListTree, UserSquare2, FolderTree, PocketKnife
@@ -13,6 +14,8 @@ export const dynamic = "force-dynamic";
 export default async function DashboardPage() {
     const session = await getServerSession(authOptions);
     const role: "ADMIN" | "TECH" | undefined = (session?.user as any)?.role;
+
+    const activeUsersCount = role === "ADMIN" ? await getActiveUsersCount() : 0;
 
     const [
         usersCount, pcsCount, monitorsCount, upsCount,
@@ -192,6 +195,7 @@ export default async function DashboardPage() {
 
     const cards = [
         { label: "Users", count: usersCount, href: "/admin/users", Icon: UsersIcon, adminOnly: true },
+        // { label: "Active Users", count: activeUsersCount, href: "/admin/active-users", Icon: UsersIcon, adminOnly: true },
         { label: "PCs", count: pcsCount, href: "/assets?category=PC", Icon: Cpu },
         { label: "Monitors", count: monitorsCount, href: "/assets?category=MONITOR", Icon: Monitor },
         { label: "UPS", count: upsCount, href: "/assets?category=UPS", Icon: HardDrive },
